@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redis.helper", "redis.helper\redis.helper.csproj", "{5A195FF8-1579-4486-BA3A-2B911AAA986A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A195FF8-1579-4486-BA3A-2B911AAA986A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A195FF8-1579-4486-BA3A-2B911AAA986A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A195FF8-1579-4486-BA3A-2B911AAA986A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A195FF8-1579-4486-BA3A-2B911AAA986A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DA70B2A4-2E18-4293-8547-0CB41B681D99}
+	EndGlobalSection
+EndGlobal
