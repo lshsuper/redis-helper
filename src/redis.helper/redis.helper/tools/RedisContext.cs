@@ -23,20 +23,9 @@ namespace redis.helper.tools
         /// 构造器
         /// </summary>
         /// <param name="type"></param>
-        public RedisContext(RedisConfigType type= RedisConfigType.Option)
+        public RedisContext()
         {
-            switch (type)
-            {
-                case RedisConfigType.ConnStr:
-                    _conn = ConnectionMultiplexer.Connect(GetConfigStr());
-                    break;
-                case RedisConfigType.Option:
-                    _conn = ConnectionMultiplexer.Connect(GetConfigOption());
-                    break;
-                default:
-                    break;
-            }
-           
+            _conn = ConnectionMultiplexer.Connect(GetConfigOption());
         }
 
         #region +Basic
@@ -101,10 +90,10 @@ namespace redis.helper.tools
         /// <param name="time"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public bool Set(string key, object value,TimeSpan? time=null, int db = -1)
+        public bool Set(string key, object value, TimeSpan? time = null, int db = -1)
         {
             var server = GetDataBase(db);
-            return server.StringSet(key, Serialize(value),time);
+            return server.StringSet(key, Serialize(value), time);
         }
         /// <summary>
         /// 获取

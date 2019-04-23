@@ -10,7 +10,7 @@ namespace redis.helper
             //1.客户端对象获取
             var client=RedisHelper.Instance;
             //2.示例操作
-            client.Set("name","lsh",null);
+            client.Set("name","lsh");
             Console.WriteLine(client.Get<string>("name"));
             Console.Read();
         }
