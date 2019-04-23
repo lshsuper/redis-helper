@@ -6,8 +6,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="app.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="app.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties app_1json__JSONSchema="http://json.schemastore.org/azure-iot-edge-deployment-1.0" /></VisualStudio></ProjectExtensions>
 
 </Project>

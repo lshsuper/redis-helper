@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 namespace redis.helper.tools
@@ -9,7 +13,7 @@ namespace redis.helper.tools
     /// <summary>
     /// 可IOC注入
     /// </summary>
-    public class RedisContext:IDisposable
+    public class RedisContext : IDisposable
     {
         private ConnectionMultiplexer _conn;
         public RedisContext()
@@ -51,7 +55,7 @@ namespace redis.helper.tools
             }
         }
         #endregion
-        
+
         #region +Basic
 
         /// <summary>
@@ -60,11 +64,29 @@ namespace redis.helper.tools
         /// <returns></returns>
         private ConfigurationOptions GetConfig()
         {
+            //1.配置文件加载器
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("app.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables();
+            IConfigurationRoot configuration = builder.Build();
+            //2.获取redis配置并映射成对象
+            var appConfig = new ServiceCollection()
+               .AddOptions()
+               .Configure<RedisConfig>(configuration.GetSection("redis"))
+               .BuildServiceProvider()
+               .GetService<IOptions<RedisConfig>>()
+               .Value;
+            //3.redis配置装备
             ConfigurationOptions options = new ConfigurationOptions();
-            options.Password = "";
-            options.EndPoints.Add("");
+            appConfig.Points.ForEach(ele =>
+            {
+                options.EndPoints.Add(ele);
+            });
+            options.Password = appConfig.Pwd;
             return options;
         }
+
         /// <summary>
         /// 获取数据库
         /// </summary>
@@ -86,16 +108,17 @@ namespace redis.helper.tools
 
         #region +String
         /// <summary>
-        /// 插入
+        ///  插入
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <param name="time"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public bool Set(string key, object value, int db = -1)
+        public bool Set(string key, object value,TimeSpan? time, int db = -1)
         {
             var server = GetDataBase(db);
-            return server.StringSet(key,Serialize(value));
+            return server.StringSet(key, Serialize(value),time);
         }
         /// <summary>
         /// 获取
@@ -109,7 +132,7 @@ namespace redis.helper.tools
             var server = GetDataBase(db);
             string value = server.StringGet(key);
             if (string.IsNullOrEmpty(value))
-                return default;
+                return default(T);
             return Deserialize<T>(value);
         }
         #endregion
@@ -122,10 +145,11 @@ namespace redis.helper.tools
         /// <param name="value"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public long LPush(string key,object value,int db=-1)
+        public long LPush(string key, object value, int db = -1)
         {
             var server = GetDataBase(db);
-            return server.ListLeftPush(key,Serialize(value));
+            return server.ListLeftPush(key, Serialize(value));
+
         }
         /// <summary>
         /// 列表左出
@@ -134,11 +158,11 @@ namespace redis.helper.tools
         /// <param name="key"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public T LPop<T>(string key,int db=-1)
+        public T LPop<T>(string key, int db = -1)
         {
             var server = GetDataBase(db);
-            string value= server.ListLeftPop(key);
-            if (string.IsNullOrEmpty(value)) return default;
+            string value = server.ListLeftPop(key);
+            if (string.IsNullOrEmpty(value)) return default(T);
             return Deserialize<T>(value);
         }
         /// <summary>
@@ -164,7 +188,7 @@ namespace redis.helper.tools
         {
             var server = GetDataBase(db);
             string value = server.ListRightPop(key);
-            if (string.IsNullOrEmpty(value)) return default;
+            if (string.IsNullOrEmpty(value)) return default(T);
             return Deserialize<T>(value);
         }
 
