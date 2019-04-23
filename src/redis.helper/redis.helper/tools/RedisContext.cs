@@ -101,7 +101,7 @@ namespace redis.helper.tools
         /// <param name="time"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public bool Set(string key, object value,TimeSpan? time, int db = -1)
+        public bool Set(string key, object value,TimeSpan? time=null, int db = -1)
         {
             var server = GetDataBase(db);
             return server.StringSet(key, Serialize(value),time);
