@@ -13,48 +13,31 @@ namespace redis.helper.tools
     /// <summary>
     /// 可IOC注入
     /// </summary>
-    public class RedisContext : IDisposable
+    public class RedisContext
     {
+        /// <summary>
+        /// 链接对象
+        /// </summary>
         private ConnectionMultiplexer _conn;
-        public RedisContext()
+        /// <summary>
+        /// 构造器
+        /// </summary>
+        /// <param name="type"></param>
+        public RedisContext(RedisConfigType type= RedisConfigType.Option)
         {
-
-            _conn = ConnectionMultiplexer.Connect(GetConfig());
-        }
-
-        #region +Disposable
-        //析构函数，编译后变成 protected void Finalize()，GC会在回收对象前会调用调用该方法 
-        ~RedisContext()
-        {
-            Dispose(false);
-        }
-
-        //通过实现该接口，客户可以显式地释放对象，而不需要等待GC来释放资源，据说那样会降低效率 
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-        }
-
-        //将释放非托管资源设计成一个虚函数，提供在继承类中释放基类的资源的能力 
-        protected virtual void ReleaseUnmanageResources()
-        {
-            //Do something... 
-            Console.WriteLine("Do something... ");
-        }
-
-        //私有函数用以释放非托管资源 
-        private void Dispose(bool disposing)
-        {
-            ReleaseUnmanageResources();
-
-            //为true时表示是客户显式调用了释放函数，需通知GC不要再调用对象的Finalize方法 
-            //为false时肯定是GC调用了对象的Finalize方法，所以没有必要再告诉GC你不要调用我的Finalize方法啦 
-            if (disposing)
+            switch (type)
             {
-                GC.SuppressFinalize(this);
+                case RedisConfigType.ConnStr:
+                    _conn = ConnectionMultiplexer.Connect(GetConfigStr());
+                    break;
+                case RedisConfigType.Option:
+                    _conn = ConnectionMultiplexer.Connect(GetConfigOption());
+                    break;
+                default:
+                    break;
             }
+           
         }
-        #endregion
 
         #region +Basic
 
@@ -62,7 +45,7 @@ namespace redis.helper.tools
         /// 获取配置
         /// </summary>
         /// <returns></returns>
-        private ConfigurationOptions GetConfig()
+        private ConfigurationOptions GetConfigOption()
         {
             //1.配置文件加载器
             var builder = new ConfigurationBuilder()
@@ -86,7 +69,10 @@ namespace redis.helper.tools
             options.Password = appConfig.Pwd;
             return options;
         }
-
+        private string GetConfigStr()
+        {
+            return "";
+        }
         /// <summary>
         /// 获取数据库
         /// </summary>
