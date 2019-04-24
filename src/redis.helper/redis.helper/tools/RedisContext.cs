@@ -166,19 +166,79 @@ namespace redis.helper.tools
             if (string.IsNullOrEmpty(value)) return default(T);
             return Deserialize<T>(value);
         }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
         #endregion
 
         #region +Set
-
+        /// <summary>
+        /// 列表追加数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public bool SAdd(string key, object value, int db = -1)
+        {
+            var server = GetDataBase(db);
+            return server.SetAdd(key, Serialize(value));
+        }
+        /// <summary>
+        /// 获取列表所有成员
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public RedisValue[] SMember(string key, int db = -1)
+        {
+            var server = GetDataBase(db);
+            RedisValue[] values = server.SetMembers(key);
+            if (values == null) return default(RedisValue[]);
+            return values;
+        }
         #endregion
 
-        #region +Lock
 
+        #region +Lock
+        /// <summary>
+        /// 分布式锁
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="expiry"></param>
+        /// <param name="action"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public bool LockAndDo(string key, string value, TimeSpan expiry, Func<bool> action, int db = -1)
+        {
+            var server = GetDataBase(db);
+            bool isLock = server.LockTake(key, value, expiry);
+            if (isLock)
+            {
+                if (action != null)
+                    return action.Invoke();
+                server.LockRelease(key,value);
+                return true;
+            }
+            return false;
+
+        }
+        /// <summary>
+        /// 乐观锁
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public bool Watch(string key,int db=-1)
+        {
+            var server = GetDataBase(db);
+            //获取逻辑事务
+            var tran=server.CreateTransaction();
+            var tagValue=tran.StringGetAsync(key).Result;
+            tran.AddCondition(Condition.StringEqual(key,tagValue));
+            bool result=tran.StringSetAsync(key,Guid.NewGuid().ToString()).Result;
+            //提交逻辑事务
+            return tran.Execute();
+        }
         #endregion
 
     }
