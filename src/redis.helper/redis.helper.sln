@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redis.helper", "redis.helper\redis.helper.csproj", "{5A195FF8-1579-4486-BA3A-2B911AAA986A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redis.helper", "redis.helper\redis.helper.csproj", "{5A195FF8-1579-4486-BA3A-2B911AAA986A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redis.repository", "redis.repository\redis.repository.csproj", "{491D2CA3-20E9-4D21-B771-3759DE64443E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redis.infrastructure", "redis.infrastructure\redis.infrastructure.csproj", "{FE21D8FA-DB10-4552-B7CF-9F422791CEF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{5A195FF8-1579-4486-BA3A-2B911AAA986A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A195FF8-1579-4486-BA3A-2B911AAA986A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A195FF8-1579-4486-BA3A-2B911AAA986A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{491D2CA3-20E9-4D21-B771-3759DE64443E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{491D2CA3-20E9-4D21-B771-3759DE64443E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{491D2CA3-20E9-4D21-B771-3759DE64443E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{491D2CA3-20E9-4D21-B771-3759DE64443E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE21D8FA-DB10-4552-B7CF-9F422791CEF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE21D8FA-DB10-4552-B7CF-9F422791CEF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE21D8FA-DB10-4552-B7CF-9F422791CEF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE21D8FA-DB10-4552-B7CF-9F422791CEF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,7 +9,7 @@ namespace redis.helper.tools
     /// <summary>
     /// 可IOC注入
     /// </summary>
-    public class RedisContext:IDisposable
+    public class RedisContext
     {
         private ConnectionMultiplexer _conn;
         public RedisContext()
@@ -18,40 +18,9 @@ namespace redis.helper.tools
             _conn = ConnectionMultiplexer.Connect(GetConfig());
         }
 
-        #region +Disposable
-        //析构函数，编译后变成 protected void Finalize()，GC会在回收对象前会调用调用该方法 
-        ~RedisContext()
-        {
-            Dispose(false);
-        }
 
-        //通过实现该接口，客户可以显式地释放对象，而不需要等待GC来释放资源，据说那样会降低效率 
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-        }
 
-        //将释放非托管资源设计成一个虚函数，提供在继承类中释放基类的资源的能力 
-        protected virtual void ReleaseUnmanageResources()
-        {
-            //Do something... 
-            Console.WriteLine("Do something... ");
-        }
 
-        //私有函数用以释放非托管资源 
-        private void Dispose(bool disposing)
-        {
-            ReleaseUnmanageResources();
-
-            //为true时表示是客户显式调用了释放函数，需通知GC不要再调用对象的Finalize方法 
-            //为false时肯定是GC调用了对象的Finalize方法，所以没有必要再告诉GC你不要调用我的Finalize方法啦 
-            if (disposing)
-            {
-                GC.SuppressFinalize(this);
-            }
-        }
-        #endregion
-        
         #region +Basic
 
         /// <summary>
@@ -61,8 +30,8 @@ namespace redis.helper.tools
         private ConfigurationOptions GetConfig()
         {
             ConfigurationOptions options = new ConfigurationOptions();
-            options.Password = "";
-            options.EndPoints.Add("");
+            //options.Password = "";
+            options.EndPoints.Add("localhost");
             return options;
         }
         /// <summary>
@@ -92,10 +61,10 @@ namespace redis.helper.tools
         /// <param name="value"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public bool Set(string key, object value, int db = -1)
+        public bool StringSet(string key, object value, int db = -1)
         {
             var server = GetDataBase(db);
-            return server.StringSet(key,Serialize(value));
+            return server.StringSet(key, Serialize(value));
         }
         /// <summary>
         /// 获取
@@ -104,7 +73,7 @@ namespace redis.helper.tools
         /// <param name="key"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public T Get<T>(string key, int db = -1)
+        public T StringGet<T>(string key, int db = -1)
         {
             var server = GetDataBase(db);
             string value = server.StringGet(key);
@@ -122,10 +91,10 @@ namespace redis.helper.tools
         /// <param name="value"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public long LPush(string key,object value,int db=-1)
+        public long LPush(string key, object value, int db = -1)
         {
             var server = GetDataBase(db);
-            return server.ListLeftPush(key,Serialize(value));
+            return server.ListLeftPush(key, Serialize(value));
         }
         /// <summary>
         /// 列表左出
@@ -134,10 +103,10 @@ namespace redis.helper.tools
         /// <param name="key"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public T LPop<T>(string key,int db=-1)
+        public T LPop<T>(string key, int db = -1)
         {
             var server = GetDataBase(db);
-            string value= server.ListLeftPop(key);
+            string value = server.ListLeftPop(key);
             if (string.IsNullOrEmpty(value)) return default;
             return Deserialize<T>(value);
         }
@@ -180,6 +149,33 @@ namespace redis.helper.tools
 
         #region +Lock
 
+        #endregion
+        #region +Geo
+        public bool GeoAdd(string key, string member, double lng, double lat, int db = -1)
+        {
+            var server = GetDataBase(db);
+            return server.GeoAdd(key,lng,lat, member);
+        }
+        public GeoPosition?[] GeoPositions(string key,RedisValue []members,int db=-1)
+        {
+            var server = GetDataBase(db);
+          return  server.GeoPosition(key, members);
+        }
+        public GeoPosition? GetPosition(string key, RedisValue member, int db = -1)
+        {
+            var server = GetDataBase(db);
+            return server.GeoPosition(key, member);
+        }
+        public GeoRadiusResult[] GeoRedius(string key,
+                              double lng,
+                              double lat,
+                              double radius,
+                              GeoUnit unit=GeoUnit.Miles,
+                              int count=-1,Order order=Order.Ascending, int db = -1)
+        {
+            var server = GetDataBase(db);
+            return server.GeoRadius(key,lng,lat,radius,unit,count,order);
+        }
         #endregion
 
     }
