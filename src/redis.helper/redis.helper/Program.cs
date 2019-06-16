@@ -1,6 +1,7 @@
 ﻿using redis.helper.tools;
 using System;
-
+using System.Collections.Generic;
+using System.Linq;
 namespace redis.helper
 {
     public class a

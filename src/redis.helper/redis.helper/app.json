@@ -1,4 +1,8 @@
 {
-  
-  
+  "redis": {
+    "points": [
+      "localhost:6379"
+    ],
+    "pwd": "lsh"
+  }
 }
