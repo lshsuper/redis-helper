@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="tools\model\" />
+    <ProjectReference Include="..\redis.infrastructure\redis.infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace redis.helper.tools
+namespace redis.infrastructure.tools
 {
     /// <summary>
     /// 静态
